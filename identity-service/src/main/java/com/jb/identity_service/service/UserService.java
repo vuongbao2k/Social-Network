@@ -14,14 +14,18 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User createUser(UserCreationRequest  userCreationRequest) {
+    public User createUser(UserCreationRequest  request) {
         User user = new User();
 
-        user.setUsername(userCreationRequest.getUsername());
-        user.setPassword(userCreationRequest.getPassword());
-        user.setFirstName(userCreationRequest.getFirstName());
-        user.setLastName(userCreationRequest.getLastName());
-        user.setDateOfBirth(userCreationRequest.getDateOfBirth());
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new RuntimeException("Username already exists: " + request.getUsername());
+        }
+
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setDateOfBirth(request.getDateOfBirth());
         return userRepository.save(user);
     }
 
