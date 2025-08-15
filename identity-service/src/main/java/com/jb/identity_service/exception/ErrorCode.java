@@ -2,6 +2,7 @@ package com.jb.identity_service.exception;
 
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception"),
+    USER_NOT_FOUND(1001, "User not found"),
     USER_EXISTED(1002, "User already exists"),
     USERNAME_INVALID(1003, "Username is invalid"),
     PASSWORD_INVALID(1004, "Password is invalid"),
