@@ -8,7 +8,7 @@ spring:
     name: identity-service
 
   datasource:
-    url: jdbc:mysql://localhost:3307/identity_service
+    url: jdbc:mysql://localhost:3306/identity_service
     username: root
     password: 1234
 
@@ -16,6 +16,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  signerKey: XRHPndz7zeYl/OwDx3dXRmWJ6Xj199B//7vb9TtiIDJ2fGl4tkXbgbUnNrtZp2XG
+  expiration: 3600000 # 1 hour in milliseconds
 
 
 
