@@ -9,10 +9,13 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
@@ -21,13 +24,21 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public List<UserResponse> getAllUsers() {
-        return userService.getAllUsers();
+    public ApiResponse<List<UserResponse>> getAllUsers() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        authentication.getAuthorities().forEach(authority ->
+            log.info("User {} has authority: {}", authentication.getName(), authority.getAuthority())
+        );
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getAllUsers())
+                .build();
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUserById(@PathVariable String id) {
-        return userService.getUserById(id);
+    public ApiResponse<UserResponse> getUserById(@PathVariable String id) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserById(id))
+                .build();
     }
 
     @PostMapping
@@ -38,13 +49,17 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable String id) {
+    public ApiResponse<String> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-        return "User deleted successfully.";
+        return ApiResponse.<String>builder()
+                .result("User deleted successfully")
+                .build();
     }
 
     @PutMapping("/{id}")
-    public UserResponse updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
-        return userService.updateUser(id, request);
+    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.updateUser(id, request))
+                .build();
     }
 }
