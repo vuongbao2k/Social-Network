@@ -42,9 +42,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
                 );
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
-                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-        ));
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
+                jwtConfigurer.decoder(jwtDecoder())
+                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+        );
 
         return http.build();
     }
