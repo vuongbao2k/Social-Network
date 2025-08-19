@@ -1,11 +1,14 @@
 package com.jb.identity_service.config;
 
+import com.jb.identity_service.constant.PredefinedRole;
+import com.jb.identity_service.entity.Role;
 import com.jb.identity_service.entity.User;
-import com.jb.identity_service.enums.Role;
+import com.jb.identity_service.repository.RoleRepository;
 import com.jb.identity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.HashSet;
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,19 +24,38 @@ import java.util.Set;
 @Slf4j
 public class ApplicationInitConfig {
     UserRepository userRepository;
+    RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
+
+    @NonFinal
+    static final String ADMIN_USER_NAME = "admin";
+
+    @NonFinal
+    static final String ADMIN_PASSWORD = "admin";
 
     @Bean
     ApplicationRunner applicationRunner() {
         return args -> {
-            if (!userRepository.existsByUsername("admin")) {
-                var roles = Set.of(Role.ADMIN.name());
+            if (!userRepository.existsByUsername(ADMIN_USER_NAME)) {
+                roleRepository.save(Role.builder()
+                        .name(PredefinedRole.USER_ROLE)
+                        .description("Default user role with basic access")
+                        .build());
+
+                var adminRole = roleRepository.save(Role.builder()
+                        .name(PredefinedRole.ADMIN_ROLE)
+                        .description("Administrator role with full access")
+                        .build());
+
+                var roles = new HashSet<Role>();
+                roles.add(adminRole);
+
                 User user = User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin"))
+                        .username(ADMIN_USER_NAME)
+                        .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .firstName("Admin")
                         .dateOfBirth(LocalDate.of(1990, 1, 1))
-//                        .roles(roles)
+                        .roles(roles)
                         .build();
 
                 userRepository.save(user);

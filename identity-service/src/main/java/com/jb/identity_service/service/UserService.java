@@ -7,7 +7,9 @@ import com.jb.identity_service.entity.User;
 import com.jb.identity_service.enums.Role;
 import com.jb.identity_service.exception.AppException;
 import com.jb.identity_service.exception.ErrorCode;
+import com.jb.identity_service.mapper.RoleMapper;
 import com.jb.identity_service.mapper.UserMapper;
+import com.jb.identity_service.repository.RoleRepository;
 import com.jb.identity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
     public UserResponse createUser(UserCreationRequest  request) {
 
@@ -72,6 +75,12 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         userMapper.updateUser(user, userUpdateRequest);
+        if (userUpdateRequest.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
+        }
+        var roles = roleRepository.findAllById(userUpdateRequest.getRoles());
+        user.setRoles(new HashSet<>(roles));
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
 }
