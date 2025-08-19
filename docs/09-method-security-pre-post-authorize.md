@@ -25,26 +25,6 @@
 - **Thêm `@EnableMethodSecurity`** để kích hoạt `@PreAuthorize/@PostAuthorize`.
 
 ```java
-package com.jb.identity_service.config;
-
-import com.jb.identity_service.enums.Role;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.web.SecurityFilterChain;
-
-import javax.crypto.spec.SecretKeySpec;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // ✅ Bật kiểm soát phân quyền ở tầng method
@@ -103,25 +83,6 @@ public class SecurityConfig {
 > Yêu cầu: class Service phải là bean Spring (`@Service`), đã bật `@EnableMethodSecurity` như trên.
 
 ```java
-package com.jb.identity_service.service;
-
-import com.jb.identity_service.dto.request.UserUpdateRequest;
-import com.jb.identity_service.dto.response.UserResponse;
-import com.jb.identity_service.entity.User;
-import com.jb.identity_service.exception.AppException;
-import com.jb.identity_service.exception.ErrorCode;
-import com.jb.identity_service.mapper.UserMapper;
-import com.jb.identity_service.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.AccessLevel;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -176,18 +137,6 @@ public class UserService {
 > Controller có thể giữ nguyên; ta chỉ **bổ sung** endpoint lấy thông tin người dùng hiện tại.
 
 ```java
-package com.jb.identity_service.controller;
-
-import com.jb.identity_service.dto.response.ApiResponse;
-import com.jb.identity_service.dto.response.UserResponse;
-import com.jb.identity_service.service.UserService;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.AccessLevel;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController

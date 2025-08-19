@@ -33,7 +33,7 @@ public class ApplicationInitConfig {
                         .password(passwordEncoder.encode("admin"))
                         .firstName("Admin")
                         .dateOfBirth(LocalDate.of(1990, 1, 1))
-                        .roles(roles)
+//                        .roles(roles)
                         .build();
 
                 userRepository.save(user);
