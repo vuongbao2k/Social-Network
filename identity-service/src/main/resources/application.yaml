@@ -19,7 +19,8 @@ spring:
 
 jwt:
   signerKey: XRHPndz7zeYl/OwDx3dXRmWJ6Xj199B//7vb9TtiIDJ2fGl4tkXbgbUnNrtZp2XG
-  expiration: 3600000 # 1 hour in milliseconds
+  valid-duration: 3600 # in seconds
+  refresh-valid-duration: 360000 # in seconds
 
 
 
