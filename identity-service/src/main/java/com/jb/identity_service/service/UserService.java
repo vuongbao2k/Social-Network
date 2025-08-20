@@ -1,13 +1,13 @@
 package com.jb.identity_service.service;
 
+import com.jb.identity_service.constant.PredefinedRole;
 import com.jb.identity_service.dto.request.UserCreationRequest;
 import com.jb.identity_service.dto.request.UserUpdateRequest;
 import com.jb.identity_service.dto.response.UserResponse;
+import com.jb.identity_service.entity.Role;
 import com.jb.identity_service.entity.User;
-import com.jb.identity_service.enums.Role;
 import com.jb.identity_service.exception.AppException;
 import com.jb.identity_service.exception.ErrorCode;
-import com.jb.identity_service.mapper.RoleMapper;
 import com.jb.identity_service.mapper.UserMapper;
 import com.jb.identity_service.repository.RoleRepository;
 import com.jb.identity_service.repository.UserRepository;
@@ -40,9 +40,11 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        var roles = new HashSet<String>();
-        roles.add(Role.USER.name());
-//        user.setRoles(roles);
+        var roles = new HashSet<Role>();
+        roleRepository.findById(PredefinedRole.USER_ROLE)
+                .ifPresent(roles::add);
+
+        user.setRoles(roles);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

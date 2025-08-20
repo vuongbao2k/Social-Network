@@ -1,5 +1,6 @@
 package com.jb.identity_service.dto.request;
 
+import com.jb.identity_service.validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,5 +21,7 @@ public class UserCreationRequest {
 
     String firstName;
     String lastName;
+
+    @DobConstraint(min = 18, message = "DOB_INVALID")
     LocalDate dateOfBirth;
 }

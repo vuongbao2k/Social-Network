@@ -15,6 +15,7 @@ public enum ErrorCode {
     PASSWORD_INVALID(1004, "Password is invalid", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1005, "User is not authenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1006, "User is not authorized", HttpStatus.FORBIDDEN),
+    DOB_INVALID(1007, "Date of birth is invalid", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;
