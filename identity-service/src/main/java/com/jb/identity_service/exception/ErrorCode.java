@@ -11,11 +11,11 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_NOT_FOUND(1001, "User not found", HttpStatus.NOT_FOUND),
     USER_EXISTED(1002, "User already exists", HttpStatus.BAD_REQUEST),
-    USERNAME_INVALID(1003, "Username is invalid", HttpStatus.BAD_REQUEST),
-    PASSWORD_INVALID(1004, "Password is invalid", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1003, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1005, "User is not authenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1006, "User is not authorized", HttpStatus.FORBIDDEN),
-    DOB_INVALID(1007, "Date of birth is invalid", HttpStatus.BAD_REQUEST),
+    DOB_INVALID(1007, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;
