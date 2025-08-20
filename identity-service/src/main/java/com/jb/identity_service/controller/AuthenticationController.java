@@ -3,6 +3,7 @@ package com.jb.identity_service.controller;
 import com.jb.identity_service.dto.request.AuthenticationRequest;
 import com.jb.identity_service.dto.request.IntrospectRequest;
 import com.jb.identity_service.dto.request.LogoutRequest;
+import com.jb.identity_service.dto.request.RefreshRequest;
 import com.jb.identity_service.dto.response.ApiResponse;
 import com.jb.identity_service.dto.response.AuthenticationResponse;
 import com.jb.identity_service.dto.response.IntrospectResponse;
@@ -29,6 +30,13 @@ public class AuthenticationController {
     ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(authenticationService.isAuthenticated(request))
+                .build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> login(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
+        return ApiResponse.<AuthenticationResponse>builder()
+                .result(authenticationService.refreshToken(request))
                 .build();
     }
 
