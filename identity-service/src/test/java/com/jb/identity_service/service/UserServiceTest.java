@@ -4,6 +4,7 @@ import com.jb.identity_service.dto.request.UserCreationRequest;
 import com.jb.identity_service.dto.response.UserResponse;
 import com.jb.identity_service.entity.User;
 import com.jb.identity_service.exception.AppException;
+import com.jb.identity_service.repository.RoleRepository;
 import com.jb.identity_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,18 +13,24 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@TestPropertySource("/test.properties")
 public class UserServiceTest {
     @Autowired
     private UserService userService;
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private RoleRepository roleRepository;
 
     private UserCreationRequest request;
     private UserResponse userResponse;
@@ -65,6 +72,8 @@ public class UserServiceTest {
                 .thenReturn(false);
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenReturn(user);
+        Mockito.when(roleRepository.findById("USER_ROLE"))
+                .thenReturn(Optional.empty()); // Assuming USER_ROLE is not defined in the test context
 
         //WHEN
         UserResponse response = userService.createUser(request);
