@@ -1,16 +1,18 @@
 package com.jb.identity_service.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.jb.identity_service.dto.request.PermissionRequest;
 import com.jb.identity_service.dto.response.ApiResponse;
 import com.jb.identity_service.dto.response.PermissionResponse;
 import com.jb.identity_service.service.PermissionService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,9 +25,7 @@ public class PermissionController {
     @PostMapping
     public ApiResponse<PermissionResponse> createPermission(@RequestBody PermissionRequest request) {
         PermissionResponse response = permissionService.createPermission(request);
-        return ApiResponse.<PermissionResponse>builder()
-                .result(response)
-                .build();
+        return ApiResponse.<PermissionResponse>builder().result(response).build();
     }
 
     @GetMapping

@@ -1,11 +1,12 @@
 package com.jb.identity_service.dto.response;
 
-import com.jb.identity_service.entity.Role;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Set;
+
+import com.jb.identity_service.entity.Role;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder

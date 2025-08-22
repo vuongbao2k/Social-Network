@@ -1,7 +1,7 @@
 package com.jb.identity_service.config;
 
-import com.jb.identity_service.dto.request.IntrospectRequest;
-import com.jb.identity_service.service.AuthenticationService;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -11,7 +11,8 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
+import com.jb.identity_service.dto.request.IntrospectRequest;
+import com.jb.identity_service.service.AuthenticationService;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
@@ -24,9 +25,8 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            var response = authenticationService.introspect(IntrospectRequest.builder()
-                    .token(token)
-                    .build());
+            var response = authenticationService.introspect(
+                    IntrospectRequest.builder().token(token).build());
             if (!response.isValid()) {
                 throw new JwtException("Invalid JWT token");
             }

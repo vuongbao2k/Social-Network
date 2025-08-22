@@ -1,11 +1,10 @@
 package com.jb.identity_service.service;
 
-import com.jb.identity_service.dto.request.UserCreationRequest;
-import com.jb.identity_service.dto.response.UserResponse;
-import com.jb.identity_service.entity.User;
-import com.jb.identity_service.exception.AppException;
-import com.jb.identity_service.repository.RoleRepository;
-import com.jb.identity_service.repository.UserRepository;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +16,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.jb.identity_service.dto.request.UserCreationRequest;
+import com.jb.identity_service.dto.response.UserResponse;
+import com.jb.identity_service.entity.User;
+import com.jb.identity_service.exception.AppException;
+import com.jb.identity_service.repository.RoleRepository;
+import com.jb.identity_service.repository.UserRepository;
 
 @SpringBootTest
 @TestPropertySource("/test.properties")
@@ -69,19 +70,16 @@ public class UserServiceTest {
 
     @Test
     void createUser_validRequest_success() {
-        //GIVEN
-        Mockito.when(userRepository.existsByUsername(request.getUsername()))
-                .thenReturn(false);
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
-                .thenReturn(user);
+        // GIVEN
+        Mockito.when(userRepository.existsByUsername(request.getUsername())).thenReturn(false);
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(roleRepository.findById("USER_ROLE"))
                 .thenReturn(Optional.empty()); // Assuming USER_ROLE is not defined in the test context
 
-        //WHEN
+        // WHEN
         UserResponse response = userService.createUser(request);
 
-
-        //THEN
+        // THEN
         Assertions.assertThat(response.getId()).isEqualTo("12345");
         Assertions.assertThat(response.getUsername()).isEqualTo("testuser");
         Assertions.assertThat(response.getFirstName()).isEqualTo("Test");
@@ -91,11 +89,10 @@ public class UserServiceTest {
 
     @Test
     void createUser_usernameAlreadyExists_throwsException() {
-        //GIVEN
-        Mockito.when(userRepository.existsByUsername(request.getUsername()))
-                .thenReturn(true);
+        // GIVEN
+        Mockito.when(userRepository.existsByUsername(request.getUsername())).thenReturn(true);
 
-        //WHEN & THEN
+        // WHEN & THEN
         var exception = assertThrows(AppException.class, () -> {
             userService.createUser(request);
         });
@@ -106,12 +103,12 @@ public class UserServiceTest {
     @Test
     @WithMockUser(username = "testuser")
     void getMyInfo_userExists_returnsUserResponse() {
-        //GIVEN
+        // GIVEN
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
-        //WHEN
+        // WHEN
         UserResponse response = userService.getMyInfo();
-        //THEN
+        // THEN
         Assertions.assertThat(response.getId()).isEqualTo("12345");
         Assertions.assertThat(response.getUsername()).isEqualTo("testuser");
         Assertions.assertThat(response.getFirstName()).isEqualTo("Test");
@@ -122,11 +119,11 @@ public class UserServiceTest {
     @Test
     @WithMockUser(username = "testuser")
     void getMyInfo_userNotFound_throwsException() {
-        //GIVEN
+        // GIVEN
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
-        //WHEN & THEN
+        // WHEN & THEN
         var exception = assertThrows(AppException.class, () -> {
             userService.getMyInfo();
         });

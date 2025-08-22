@@ -1,19 +1,22 @@
 package com.jb.identity_service.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import com.jb.identity_service.dto.request.UserCreationRequest;
 import com.jb.identity_service.dto.request.UserUpdateRequest;
 import com.jb.identity_service.dto.response.ApiResponse;
 import com.jb.identity_service.dto.response.UserResponse;
 import com.jb.identity_service.service.UserService;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,9 +29,10 @@ public class UserController {
     @GetMapping
     public ApiResponse<List<UserResponse>> getAllUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        authentication.getAuthorities().forEach(authority ->
-            log.info("User {} has authority: {}", authentication.getName(), authority.getAuthority())
-        );
+        authentication
+                .getAuthorities()
+                .forEach(authority ->
+                        log.info("User {} has authority: {}", authentication.getName(), authority.getAuthority()));
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getAllUsers())
                 .build();
@@ -58,9 +62,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-        return ApiResponse.<String>builder()
-                .result("User deleted successfully")
-                .build();
+        return ApiResponse.<String>builder().result("User deleted successfully").build();
     }
 
     @PutMapping("/{id}")

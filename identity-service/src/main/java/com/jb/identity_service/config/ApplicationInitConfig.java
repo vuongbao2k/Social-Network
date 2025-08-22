@@ -1,23 +1,25 @@
 package com.jb.identity_service.config;
 
-import com.jb.identity_service.constant.PredefinedRole;
-import com.jb.identity_service.entity.Role;
-import com.jb.identity_service.entity.User;
-import com.jb.identity_service.repository.RoleRepository;
-import com.jb.identity_service.repository.UserRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+import java.util.HashSet;
+
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
-import java.util.HashSet;
+import com.jb.identity_service.constant.PredefinedRole;
+import com.jb.identity_service.entity.Role;
+import com.jb.identity_service.entity.User;
+import com.jb.identity_service.repository.RoleRepository;
+import com.jb.identity_service.repository.UserRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,7 +37,10 @@ public class ApplicationInitConfig {
     static final String ADMIN_PASSWORD = "admin";
 
     @Bean
-    @ConditionalOnProperty(prefix = "spring", value = "datasource.driver-class-name", havingValue = "com.mysql.cj.jdbc.Driver")
+    @ConditionalOnProperty(
+            prefix = "spring",
+            value = "datasource.driver-class-name",
+            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner() {
         return args -> {
             if (!userRepository.existsByUsername(ADMIN_USER_NAME)) {

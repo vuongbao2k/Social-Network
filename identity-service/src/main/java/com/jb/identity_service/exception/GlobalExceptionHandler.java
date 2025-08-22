@@ -1,14 +1,16 @@
 package com.jb.identity_service.exception;
 
-import com.jb.identity_service.dto.response.ApiResponse;
+import java.util.Map;
+
 import jakarta.validation.ConstraintViolation;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Map;
+import com.jb.identity_service.dto.response.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -55,7 +57,8 @@ public class GlobalExceptionHandler {
 
     private String mapAttibute(String message, Map<String, Object> attributes) {
         if (attributes.containsKey(MIN_ATTRIBUTE)) {
-            return message.replace("{" + MIN_ATTRIBUTE + "}", attributes.get(MIN_ATTRIBUTE).toString());
+            return message.replace(
+                    "{" + MIN_ATTRIBUTE + "}", attributes.get(MIN_ATTRIBUTE).toString());
         }
         return message;
     }
