@@ -1,7 +1,5 @@
 package com.jb.identity_service.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,15 +18,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${jwt.signerKey}")
-    private String SIGNER_KEY;
 
-    @Autowired
-    private CustomJwtDecoder customJwtDecoder;
+    private final CustomJwtDecoder customJwtDecoder;
 
-    private final String[] PUBLIC_ENDPOINTS = {
+    private static final String[] PUBLIC_ENDPOINTS = {
         "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
     };
+
+    public SecurityConfig(CustomJwtDecoder customJwtDecoder) {
+        this.customJwtDecoder = customJwtDecoder;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,13 +44,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //    @Bean
-    //    JwtDecoder jwtDecoder() {
-    //        SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
-    //        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
-    //                .macAlgorithm(MacAlgorithm.HS512)
-    //                .build();
-    //    }
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
