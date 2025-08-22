@@ -9,10 +9,12 @@ import com.jb.identity_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
@@ -99,5 +101,36 @@ public class UserServiceTest {
         });
 
         Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1002);
+    }
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void getMyInfo_userExists_returnsUserResponse() {
+        //GIVEN
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+        //WHEN
+        UserResponse response = userService.getMyInfo();
+        //THEN
+        Assertions.assertThat(response.getId()).isEqualTo("12345");
+        Assertions.assertThat(response.getUsername()).isEqualTo("testuser");
+        Assertions.assertThat(response.getFirstName()).isEqualTo("Test");
+        Assertions.assertThat(response.getLastName()).isEqualTo("User");
+        Assertions.assertThat(response.getDateOfBirth()).isEqualTo(dateOfBirth);
+    }
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void getMyInfo_userNotFound_throwsException() {
+        //GIVEN
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        //WHEN & THEN
+        var exception = assertThrows(AppException.class, () -> {
+            userService.getMyInfo();
+        });
+
+        Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1001);
     }
 }
