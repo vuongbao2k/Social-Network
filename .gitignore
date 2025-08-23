@@ -1,0 +1,41 @@
+### Java / Spring Boot
+identity-service/target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# IntelliJ / Eclipse / VSCode
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+.vscode/
+
+### Node / React
+# dependencies
+web-app/node_modules/
+
+# production build
+web-app/build/
+web-app/dist/
+
+# misc
+web-app/.env.local
+web-app/.env.development.local
+web-app/.env.test.local
+web-app/.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### MacOS
+.DS_Store
+
+### General
+*.swp
+*.swo
