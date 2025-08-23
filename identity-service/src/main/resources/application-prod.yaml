@@ -1,0 +1,8 @@
+jwt:
+  signerKey: QiaHFNbjkigFCC7wlRqWZBAnqgpgcq8WNXmeRa7x1dS1yEkFUOATnAqDlSnfSDSb
+  valid-duration: 7200 # in seconds
+  refresh-valid-duration: 720000 # in seconds
+
+
+
+
