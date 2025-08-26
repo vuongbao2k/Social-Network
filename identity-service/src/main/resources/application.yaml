@@ -18,6 +18,15 @@ spring:
       ddl-auto: update
     show-sql: true
 
+<<<<<<< HEAD
+=======
+outbound:
+  identity:
+    client-id: 850035654893-lft23uc6jkrs8u7l8t2svf8dfnbtpa4q.apps.googleusercontent.com
+    client-secret: ${GOOGLE_CLIENT_SECRET:your_google_client_secret}
+    redirect-uri: http://localhost:3000/authenticate
+
+>>>>>>> c708287 (feat(oauth2): implement Authorization Code flow (FE code, Feign client, exchange token))
 jwt:
   signerKey: XRHPndz7zeYl/OwDx3dXRmWJ6Xj199B//7vb9TtiIDJ2fGl4tkXbgbUnNrtZp2XG
   valid-duration: 3600 # in seconds
