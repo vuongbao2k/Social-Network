@@ -3,10 +3,16 @@ package com.jb.identity_service.service;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
+<<<<<<< HEAD
+=======
+import com.jb.identity_service.constant.PredefinedRole;
+import com.jb.identity_service.dto.request.*;
+import com.jb.identity_service.entity.Role;
+import com.jb.identity_service.repository.httpclient.OutboundIdentityClient;
+import com.jb.identity_service.repository.httpclient.OutboundUserClient;
+>>>>>>> 8505cc1 (feat(oauth2): onboard Google user via userinfo and upsert into local DB)
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +49,11 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+<<<<<<< HEAD
+=======
+    OutboundIdentityClient outboundIdentityClient;
+    OutboundUserClient outboundUserClient;
+>>>>>>> 8505cc1 (feat(oauth2): onboard Google user via userinfo and upsert into local DB)
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -68,6 +79,39 @@ public class AuthenticationService {
         return IntrospectResponse.builder().valid(isValid).build();
     }
 
+<<<<<<< HEAD
+=======
+    public AuthenticationResponse outboundAuthentication(String code) {
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+
+        var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.builder().name(PredefinedRole.USER_ROLE).build()); // default
+
+        var user = userRepository.findByUsername(userInfo.getEmail()).orElseGet(() -> {
+            var newUser = User.builder()
+                    .username(userInfo.getEmail())
+                    .firstName(userInfo.getGivenName())
+                    .lastName(userInfo.getFamilyName())
+                    .roles(roles)
+                    .build();
+            return userRepository.save(newUser);
+        });
+
+        return AuthenticationResponse.builder()
+                .token(response.getAccessToken())
+                .authenticated(true)
+                .build();
+    }
+
+>>>>>>> 8505cc1 (feat(oauth2): onboard Google user via userinfo and upsert into local DB)
     public AuthenticationResponse isAuthenticated(AuthenticationRequest request) {
         User user = userRepository
                 .findByUsername(request.getUsername())
