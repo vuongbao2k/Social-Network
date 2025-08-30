@@ -110,7 +110,7 @@ public class AuthenticationService {
                     .build();
             return userRepository.save(newUser);
         });
-        
+
         var token = generateToken(user);
 
         return AuthenticationResponse.builder()

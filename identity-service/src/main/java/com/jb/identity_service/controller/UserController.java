@@ -2,6 +2,7 @@ package com.jb.identity_service.controller;
 
 import java.util.List;
 
+import com.jb.identity_service.dto.request.PasswordCreationRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,6 +58,14 @@ public class UserController {
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(userService.createUser(request));
         return response;
+    }
+
+    @PostMapping("/create-password")
+    public ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
+        userService.createPassword(request.getPassword());
+        return ApiResponse.<Void>builder()
+                .message("Password created successfully")
+                .build();
     }
 
     @DeleteMapping("/{id}")

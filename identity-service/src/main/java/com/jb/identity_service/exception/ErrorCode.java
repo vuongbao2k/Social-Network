@@ -17,6 +17,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1005, "User is not authenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1006, "User is not authorized", HttpStatus.FORBIDDEN),
     DOB_INVALID(1007, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    PASSWORD_ALREADY_CREATED(1008, "Password has already been created", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;
