@@ -5,23 +5,17 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-<<<<<<< HEAD
-=======
+
 import com.jb.identity_service.constant.PredefinedRole;
 import com.jb.identity_service.dto.request.*;
 import com.jb.identity_service.entity.Role;
 import com.jb.identity_service.repository.httpclient.OutboundIdentityClient;
 import com.jb.identity_service.repository.httpclient.OutboundUserClient;
->>>>>>> 8505cc1 (feat(oauth2): onboard Google user via userinfo and upsert into local DB)
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.jb.identity_service.dto.request.AuthenticationRequest;
-import com.jb.identity_service.dto.request.IntrospectRequest;
-import com.jb.identity_service.dto.request.LogoutRequest;
-import com.jb.identity_service.dto.request.RefreshRequest;
 import com.jb.identity_service.dto.response.AuthenticationResponse;
 import com.jb.identity_service.dto.response.IntrospectResponse;
 import com.jb.identity_service.entity.InvalidatedToken;
@@ -49,11 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
-<<<<<<< HEAD
-=======
+
     OutboundIdentityClient outboundIdentityClient;
     OutboundUserClient outboundUserClient;
->>>>>>> 8505cc1 (feat(oauth2): onboard Google user via userinfo and upsert into local DB)
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -67,6 +59,21 @@ public class AuthenticationService {
     @Value("${jwt.refresh-valid-duration}")
     private long REFRESH_VALID_DURATION;
 
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    private String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    private String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    private String REDIRECT_URI;
+
+    @NonFinal
+    private final String GRANT_TYPE = "authorization_code";
+
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isValid = true;
@@ -79,8 +86,7 @@ public class AuthenticationService {
         return IntrospectResponse.builder().valid(isValid).build();
     }
 
-<<<<<<< HEAD
-=======
+
     public AuthenticationResponse outboundAuthentication(String code) {
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
@@ -104,14 +110,15 @@ public class AuthenticationService {
                     .build();
             return userRepository.save(newUser);
         });
+        
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
-                .token(response.getAccessToken())
+                .token(token)
                 .authenticated(true)
                 .build();
     }
 
->>>>>>> 8505cc1 (feat(oauth2): onboard Google user via userinfo and upsert into local DB)
     public AuthenticationResponse isAuthenticated(AuthenticationRequest request) {
         User user = userRepository
                 .findByUsername(request.getUsername())

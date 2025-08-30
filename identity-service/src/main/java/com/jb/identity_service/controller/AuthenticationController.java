@@ -2,10 +2,7 @@ package com.jb.identity_service.controller;
 
 import java.text.ParseException;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jb.identity_service.dto.request.AuthenticationRequest;
 import com.jb.identity_service.dto.request.IntrospectRequest;
@@ -27,6 +24,13 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/auth")
 public class AuthenticationController {
     AuthenticationService authenticationService;
+
+    @PostMapping("outbound/authentication")
+    ApiResponse<AuthenticationResponse> outboundAuthentication(@RequestParam String code) {
+        return ApiResponse.<AuthenticationResponse>builder()
+                .result(authenticationService.outboundAuthentication(code))
+                .build();
+    }
 
     @PostMapping("/token")
     ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
